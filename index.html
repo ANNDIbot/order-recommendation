@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -15,14 +14,14 @@
       font-size: 1.3rem;
       padding: 1.5rem;
       border-radius: 1.5rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       text-align: center;
       width: 100%;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .btn:hover {
       transform: scale(1.02);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
     .btn:active {
       transform: scale(0.98);
@@ -33,76 +32,79 @@
       font-size: 1.3rem;
       padding: 1.5rem;
       border-radius: 1.5rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       text-align: center;
       width: 100%;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .btn-random:hover {
       transform: scale(1.02);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
     .btn-random:active {
       transform: scale(0.98);
     }
     .btn-blue {
-      background-color: #F3F4F6; /* 浅灰白 */
+      background-color: #F3F4F6;
       color: black;
       font-size: 1.2rem;
       padding: 1rem 1.75rem;
       border-radius: 1.25rem;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       text-align: center;
     }
     .section-card {
       background-color: #F9FAFB;
       border-radius: 2rem;
       padding: 2.5rem 2rem;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       margin-bottom: 2.5rem;
     }
     .grid-cols-2 > button {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
     .section-card h2 {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
     .border-t {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    #regionButtons {
+      max-height: 38rem; /* 调整最大高度以适应六行按钮 */
+      overflow-y: auto;
     }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start py-6 px-4">
   <div id="app" class="w-full max-w-md space-y-6">
-
-    <!-- 页面 1：选择口味 -->
     <div id="page1" class="space-y-6">
       <div class="section-card">
-        <h2 class="text-center text-xl font-semibold mb-2">请选择口味</h2>
-        <div class="border-t border-gray-200 mb-4"></div>
+        <h2 class="text-center text-xl font-semibold">请选择口味</h2>
+        <div class="border-t border-gray-200"></div>
         <div class="grid grid-cols-2 gap-4">
-          <button class="btn" onclick="selectFlavor('咸鲜')">咸鲜</button>
+          <button class="btn" onclick="selectFlavor('咸香')">咸香</button>
           <button class="btn" onclick="selectFlavor('香辣')">香辣</button>
-          <button class="btn" onclick="selectFlavor('偏甜')">偏甜</button>
+          <button class="btn" onclick="selectFlavor('酸甜')">酸甜</button>
           <button class="btn" onclick="selectFlavor('清淡')">清淡</button>
+          <button class="btn" onclick="selectFlavor('浓郁')">浓郁</button>
+          <button class="btn" onclick="selectFlavor('酥脆')">酥脆</button>
+          <button class="btn" onclick="selectFlavor('软糯')">软糯</button>
+          <button class="btn" onclick="selectFlavor('鲜美')">鲜美</button>
+          <button class="btn" onclick="selectFlavor('健康简餐')">健康简餐</button>
           <button class="btn-random col-span-2" onclick="selectFlavorRandom()">随机</button>
         </div>
       </div>
     </div>
-
-    <!-- 页面 2：选择地区 -->
     <div id="page2" class="space-y-6 hidden">
       <div class="section-card">
-        <h2 class="text-center text-xl font-semibold mb-2">请选择菜系</h2>
-        <div class="border-t border-gray-200 mb-4"></div>
-        <div id="regionButtons" class="grid grid-cols-2 gap-4 max-h-[50vh] overflow-y-scroll pr-1"></div>
+        <h2 class="text-center text-xl font-semibold">请选择菜系</h2>
+        <div class="border-t border-gray-200"></div>
+        <div id="regionButtons" class="grid grid-cols-2 gap-4"></div>
         <div class="text-center mt-4">
           <button class="btn-blue" onclick="goBackToPage1()">← 返回上一步</button>
         </div>
       </div>
     </div>
-
-    <!-- 页面 3：推荐结果 -->
     <div id="page3" class="space-y-6 hidden">
       <div class="section-card text-center">
         <h2 class="text-xl font-semibold mb-2">推荐宝子今天吃</h2>
@@ -114,79 +116,182 @@
         </div>
       </div>
     </div>
-
   </div>
-
   <script>
-    // 数据定义
-    const flavorRegionMap = {
-      "偏甜": ["韩式", "广式", "江浙"],
-      "咸鲜": ["北方", "云贵", "湘式", "家常", "江浙", "福建", "广式", "美式", "西北"],
-      "清淡": ["日式", "美式", "北方", "家常", "川渝", "广式"],
-      "香辣": ["川渝", "韩式", "西北"]
-    };
-
-    const allRegions = Array.from(new Set(Object.values(flavorRegionMap).flat()));
-
     const data = [
-      { name: "石锅拌饭", flavor: "偏甜", region: "韩式" },
-      { name: "避风塘", flavor: "偏甜", region: "广式" },
-      { name: "广式烧味饭", flavor: "偏甜", region: "广式" },
-      { name: "醉美里", flavor: "偏甜", region: "江浙" },
-      { name: "浦高老上海本帮菜", flavor: "偏甜", region: "江浙" },
-      { name: "炒饼丝", flavor: "咸鲜", region: "北方" },
-      { name: "贵州米粉", flavor: "咸鲜", region: "云贵" },
-      { name: "小满手工粉", flavor: "咸鲜", region: "湘式" },
-      { name: "汤面/拌面/炒面", flavor: "咸鲜", region: "家常" },
-      { name: "刺臂/超模/超级碗", flavor: "咸鲜", region: "家常" },
-      { name: "新发现", flavor: "咸鲜", region: "江浙" },
-      { name: "老娘舅", flavor: "咸鲜", region: "江浙" },
-      { name: "外婆家", flavor: "咸鲜", region: "家常" },
-      { name: "沙县小吃", flavor: "咸鲜", region: "福建" },
-      { name: "五香卤味", flavor: "咸鲜", region: "广式" },
-      { name: "炸鸡配奶茶", flavor: "咸鲜", region: "美式" },
-      { name: "新疆炒米粉", flavor: "咸鲜", region: "西北" },
-      { name: "社区食堂or饭堂", flavor: "咸鲜", region: "家常" },
-      { name: "莆田餐厅", flavor: "咸鲜", region: "福建" },
-      { name: "家府潮汕菜", flavor: "咸鲜", region: "广式" },
-      { name: "麦当劳", flavor: "咸鲜", region: "美式" },
-      { name: "西贝", flavor: "咸鲜", region: "西北" },
-      { name: "寿司拼盘", flavor: "清淡", region: "日式" },
-      { name: "赛百味", flavor: "清淡", region: "美式" },
-      { name: "饺子/馄饨", flavor: "清淡", region: "北方" },
-      { name: "寿喜烧", flavor: "清淡", region: "日式" },
-      { name: "沙县", flavor: "清淡", region: "家常" },
-      { name: "翘脚牛肉", flavor: "清淡", region: "川渝" },
-      { name: "左庭右院", flavor: "清淡", region: "广式" },
-      { name: "麻辣香锅", flavor: "香辣", region: "川渝" },
-      { name: "麻辣烫", flavor: "香辣", region: "川渝" },
-      { name: "冒菜", flavor: "香辣", region: "川渝" },
-      { name: "韩式汤饭", flavor: "香辣", region: "韩式" },
-      { name: "新疆炒米粉", flavor: "香辣", region: "西北" }
+      { name: "经典牛肉面", flavor: "咸香", region: "西北菜" },
+      { name: "招牌炸酱面", flavor: "咸香", region: "其他" },
+      { name: "鲜虾云吞面", flavor: "清淡", region: "其他" },
+      { name: "日式豚骨拉面", flavor: "浓郁", region: "日式料理" },
+      { name: "韩式部队锅", flavor: "其他", region: "韩式料理" },
+      { name: "经典海南鸡饭", flavor: "清淡", region: "东南亚" },
+      { name: "广式烧腊饭", flavor: "咸香", region: "粤菜" },
+      { name: "照烧鸡肉饭", flavor: "其他", region: "日式料理" },
+      { name: "卤肉饭", flavor: "其他", region: "其他" },
+      { name: "咖喱牛肉饭", flavor: "浓郁", region: "东南亚" },
+      { name: "鳗鱼饭", flavor: "其他", region: "日式料理" },
+      { name: "意式肉酱面", flavor: "酸甜", region: "西式料理" },
+      { name: "奶油蘑菇意面", flavor: "浓郁", region: "西式料理" },
+      { name: "海鲜意面", flavor: "其他", region: "西式料理" },
+      { name: "经典披萨", flavor: "其他", region: "西式料理" },
+      { name: "蔬菜沙拉", flavor: "清淡", region: "轻食" },
+      { name: "金枪鱼沙拉", flavor: "其他", region: "轻食" },
+      { name: "鸡肉沙拉", flavor: "健康简餐", region: "轻食" },
+      { name: "墨西哥卷饼", flavor: "其他", region: "其他" },
+      { name: "炸鸡汉堡", flavor: "酥脆", region: "西式快餐" },
+      { name: "寿司拼盘", flavor: "其他", region: "日式料理" },
+      { name: "皮蛋瘦肉粥", flavor: "其他", region: "粤菜" },
+      { name: "海鲜粥", flavor: "其他", region: "粤菜" },
+      { name: "煎饼果子", flavor: "咸香", region: "中式小吃" },
+      { name: "炒河粉", flavor: "咸香", region: "粤菜" },
+      { name: "炒年糕", flavor: "香辣", region: "韩式料理" },
+      { name: "肉夹馍", flavor: "咸香", region: "中式小吃" },
+      { name: "凉皮", flavor: "香辣", region: "中式小吃" },
+      { name: "螺蛳粉", flavor: "香辣", region: "中式小吃" },
+      { name: "馄饨", flavor: "其他", region: "中式小吃" },
+      { name: "包子", flavor: "其他", region: "中式小吃" },
+      { name: "锅贴", flavor: "酥脆", region: "中式小吃" },
+      { name: "饺子", flavor: "其他", region: "中式小吃" },
+      { name: "烤冷面", flavor: "咸香", region: "中式小吃" },
+      { name: "章鱼小丸子", flavor: "酥脆", region: "日式料理" },
+      { name: "关东煮", flavor: "其他", region: "日式料理" },
+      { name: "炒面", flavor: "咸香", region: "中式小吃" },
+      { name: "炒饭", flavor: "咸香", region: "中式小吃" },
+      { name: "麻辣烫", flavor: "香辣", region: "川菜" },
+      { name: "冒菜", flavor: "香辣", region: "川菜" },
+      { name: "钵钵鸡", flavor: "香辣", region: "川菜" },
+      { name: "酸辣粉", flavor: "香辣", region: "川菜" },
+      { name: "烤肉拌饭", flavor: "浓郁", region: "韩式料理" },
+      { name: "石锅拌饭", flavor: "其他", region: "韩式料理" },
+      { name: "炸鸡配薯条", flavor: "酥脆", region: "西式快餐" },
+      { name: "三明治", flavor: "其他", region: "西式快餐" },
+      { name: "帕尼尼", flavor: "酥脆", region: "西式料理" },
+      { name: "可丽饼", flavor: "其他", region: "西式料理" },
+      { name: "华夫饼", flavor: "软糯", region: "西式快餐" },
+      { name: "意式三明治", flavor: "其他", region: "西式料理" },
+      { name: "炸鱼薯条", flavor: "酥脆", region: "西式快餐" },
+      { name: "墨西哥玉米饼", flavor: "其他", region: "西式快餐" },
+      { name: "肉丸意面", flavor: "浓郁", region: "西式料理" },
+      { name: "鸡肉卷饼", flavor: "其他", region: "西式快餐" },
+      { name: "蔬菜卷饼", flavor: "清淡", region: "西式快餐" },
+      { name: "炒米粉", flavor: "咸香", region: "东南亚" },
+      { name: "泰式炒河粉", flavor: "酸甜", region: "东南亚" },
+      { name: "越南河粉", flavor: "其他", region: "东南亚" },
+      { name: "印度咖喱饭", flavor: "浓郁", region: "印度菜" },
+      { name: "印度飞饼", flavor: "酥脆", region: "印度菜" },
+      { name: "希腊烤肉卷", flavor: "其他", region: "西式料理" },
+      { name: "藜麦沙拉", flavor: "健康简餐", region: "轻食" },
+      { name: "牛油果吐司", flavor: "健康简餐", region: "轻食" },
+      { name: "水果酸奶碗", flavor: "清淡", region: "轻食" },
+      { name: "能量碗", flavor: "其他", region: "轻食" },
+      { name: "蔬菜意面", flavor: "清淡", region: "西式料理" },
+      { name: "蘑菇意面", flavor: "浓郁", region: "西式料理" },
+      { name: "海鲜炒饭", flavor: "其他", region: "中式家常" },
+      { name: "扬州炒饭", flavor: "咸香", region: "中式家常" },
+      { name: "盖浇饭", flavor: "其他", region: "中式家常" },
+      { name: "麻辣香锅", flavor: "香辣", region: "川菜" },
+      { name: "烤鱼", flavor: "鲜美", region: "川菜" },
+      { name: "干锅", flavor: "香辣", region: "川菜" },
+      { name: "铁板烧", flavor: "健康简餐", region: "日式料理" },
+      { name: "寿喜锅", flavor: "其他", region: "日式料理" },
+      { name: "鱼香肉丝饭", flavor: "其他", region: "川菜" },
+      { name: "宫保鸡丁饭", flavor: "香辣", region: "川菜" },
+      { name: "麻婆豆腐饭", flavor: "香辣", region: "川菜" },
+      { name: "回锅肉饭", flavor: "其他", region: "川菜" },
+      { name: "水煮牛肉饭", flavor: "香辣", region: "川菜" },
+      { name: "腊味煲仔饭", flavor: "其他", region: "粤菜" },
+      { name: "排骨煲仔饭", flavor: "咸香", region: "粤菜" },
+      { name: "香菇滑鸡饭", flavor: "清淡", region: "粤菜" },
+      { name: "豉汁排骨饭", flavor: "咸香", region: "粤菜" },
+      { name: "烧鸭饭", flavor: "咸香", region: "粤菜" },
+      { name: "蛋炒饭", flavor: "健康简餐", region: "中式家常" },
+      { name: "西红柿鸡蛋面", flavor: "酸甜", region: "中式家常" },
+      { name: "打卤面", flavor: "其他", region: "中式家常" },
+      { name: "臊子面", flavor: "香辣", region: "西北菜" },
+      { name: "油泼面", flavor: "香辣", region: "西北菜" },
+      { name: "羊肉泡馍", flavor: "其他", region: "西北菜" },
+      { name: "刀削面", flavor: "其他", region: "西北菜" },
+      { name: "剔尖面", flavor: "其他", region: "西北菜" },
+      { name: "焖面", flavor: "软糯", region: "西北菜" },
+      { name: "小鸡炖蘑菇", flavor: "鲜美", region: "其他" },
+      { name: "猪肉炖粉条", flavor: "软糯", region: "其他" },
+      { name: "地三鲜", flavor: "咸香", region: "其他" },
+      { name: "锅包肉", flavor: "酸甜", region: "其他" },
+      { name: "铁锅炖", flavor: "其他", region: "其他" },
+      { name: "砂锅粥", flavor: "鲜美", region: "粤菜" },
+      { name: "及第粥", flavor: "其他", region: "粤菜" },
+      { name: "生滚鱼片粥", flavor: "鲜美", region: "粤菜" },
+      { name: "艇仔粥", flavor: "其他", region: "粤菜" },
+      { name: "潮汕砂锅粥", flavor: "其他", region: "粤菜" },
+      { name: "白斩鸡饭", flavor: "清淡", region: "粤菜" },
+      { name: "盐焗鸡饭", flavor: "咸香", region: "粤菜" },
+      { name: "叉烧饭", flavor: "其他", region: "粤菜" },
+      { name: "烧鹅饭", flavor: "咸香", region: "粤菜" },
+      { name: "炒牛河", flavor: "咸香", region: "粤菜" },
+      { name: "星洲炒米粉", flavor: "咸香", region: "粤菜" },
+      { name: "潮汕牛肉丸粿条", flavor: "鲜美", region: "粤菜" },
+      { name: "潮汕蚝烙", flavor: "鲜美", region: "粤菜" },
+      { name: "福建沙茶面", flavor: "浓郁", region: "闽菜" },
+      { name: "厦门海鲜面线糊", flavor: "其他", region: "闽菜" },
+      { name: "莆田卤面", flavor: "浓郁", region: "闽菜" },
+      { name: "泉州姜母鸭饭", flavor: "其他", region: "闽菜" },
+      { name: "客家酿豆腐", flavor: "咸香", region: "闽菜" },
+      { name: "梅菜扣肉饭", flavor: "其他", region: "闽菜" },
+      { name: "藜麦蔬菜沙拉", flavor: "清淡", region: "轻食" },
+      { name: "牛油果鸡肉沙拉", flavor: "清淡", region: "轻食" },
+      { name: "金枪鱼藜麦碗", flavor: "鲜美", region: "轻食" },
+      { name: "烤三文鱼配蔬菜", flavor: "鲜美", region: "轻食" },
+      { name: "鸡胸肉蔬菜卷", flavor: "清淡", region: "轻食" },
+      { name: "杂粮粥配饼", flavor: "清淡", region: "中式家常" },
+      { name: "蘑菇藜麦烩饭", flavor: "鲜美", region: "轻食" },
+      { name: "鹰嘴豆泥配蔬菜", flavor: "清淡", region: "其他" },
+      { name: "烤蔬菜配藜麦", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜豆腐汤", flavor: "清淡", region: "其他" },
+      { name: "鲜虾蔬菜沙拉", flavor: "清淡", region: "轻食" },
+      { name: "烤鸡胸肉配时蔬", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜全麦三明治", flavor: "清淡", region: "轻食" },
+      { name: "杂粮煎饼", flavor: "咸香", region: "中式小吃" },
+      { name: "蔬菜豆腐煲", flavor: "清淡", region: "中式家常" },
+      { name: "烤时蔬配鱼肉", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜鸡肉卷饼", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜豆腐意面", flavor: "清淡", region: "西式料理" },
+      { name: "蔬菜金枪鱼沙拉", flavor: "清淡", region: "轻食" },
+      { name: "烤蔬菜配鸡肉", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜全麦披萨", flavor: "清淡", region: "西式料理" },
+      { name: "蔬菜豆腐汤面", flavor: "清淡", region: "其他" },
+      { name: "烤蔬菜配牛肉", flavor: "清淡", region: "轻食" },
+      { name: "蔬菜牛肉卷饼", flavor: "清淡", region: "轻食" },
+      { name: "鸡腿饭", flavor: "咸香", region: "轻食" },
+      { name: "鸭腿饭", flavor: "咸香", region: "轻食" }
     ];
-
-    // 状态变量
+    const flavorRegionMap = {
+      "咸香": ["西北菜", "其他", "粤菜", "中式小吃", "中式家常", "轻食"],
+      "香辣": ["韩式料理", "川菜", "西北菜", "中式小吃"],
+      "酸甜": ["西式料理", "东南亚", "中式家常", "其他"],
+      "清淡": ["其他", "东南亚", "轻食", "粤菜", "西式快餐", "中式家常", "西式料理"],
+      "浓郁": ["日式料理", "东南亚", "西式料理", "韩式料理", "印度菜", "西式料理"],
+      "酥脆": ["西式快餐", "中式小吃", "日式料理", "西式料理", "印度菜"],
+      "软糯": ["西北菜", "其他", "西式快餐"],
+      "鲜美": ["川菜", "粤菜", "轻食"],
+      "健康简餐": ["轻食", "日式料理", "中式家常"]
+    };
+    const allRegions = Array.from(new Set(Object.values(flavorRegionMap).flat()));
     let selectedFlavor = '';
     let selectedRegion = '';
     let isFlavorRandom = false;
-
-    // 功能函数
     function showResult() {
       const candidates = data.filter(d => d.flavor === selectedFlavor && d.region === selectedRegion);
       let pick, message;
-
       if (candidates.length > 0) {
         pick = randomPick(candidates).name;
         message = '✨ 希望你今天吃得开心 ✨';
       } else {
         pick = randomPick(data).name;
-        message = '🤔 没有合适的推荐诶...要不今天先试试这个？';
+        message = ' 没有合适的推荐诶...要不今天先试试这个？';
       }
-
       document.getElementById('resultText').innerText = pick;
       document.getElementById('resultTip').innerText = message;
     }
-
     function selectFlavor(flavor) {
       selectedFlavor = flavor;
       isFlavorRandom = false;
@@ -194,7 +299,6 @@
       document.getElementById('page1').classList.add('hidden');
       document.getElementById('page2').classList.remove('hidden');
     }
-
     function selectFlavorRandom() {
       const flavors = Object.keys(flavorRegionMap);
       selectedFlavor = randomPick(flavors);
@@ -203,12 +307,10 @@
       document.getElementById('page1').classList.add('hidden');
       document.getElementById('page2').classList.remove('hidden');
     }
-
     function generateRegionButtons(showAll = false) {
       const regionList = showAll ? allRegions : (flavorRegionMap[selectedFlavor] || []);
       const container = document.getElementById('regionButtons');
       container.innerHTML = '';
-
       regionList.forEach(region => {
         const btn = document.createElement('button');
         btn.className = 'btn';
@@ -216,14 +318,12 @@
         btn.onclick = () => selectRegion(region);
         container.appendChild(btn);
       });
-
       const btnRandom = document.createElement('button');
       btnRandom.className = 'btn-random col-span-2';
       btnRandom.innerText = '随机';
       btnRandom.onclick = () => selectRegion('随机');
       container.appendChild(btnRandom);
     }
-
     function selectRegion(region) {
       const regionList = flavorRegionMap[selectedFlavor] || allRegions;
       selectedRegion = region === '随机' ? randomPick(regionList) : region;
@@ -231,22 +331,17 @@
       document.getElementById('page3').classList.remove('hidden');
       showResult();
     }
-
     function goBackToPage1() {
       document.getElementById('page2').classList.add('hidden');
       document.getElementById('page1').classList.remove('hidden');
     }
-
     function goBackToPage2() {
       document.getElementById('page3').classList.add('hidden');
       document.getElementById('page2').classList.remove('hidden');
     }
-
     function randomPick(list) {
       return list[Math.floor(Math.random() * list.length)];
     }
-
-    // 将函数暴露给全局作用域
     window.selectFlavor = selectFlavor;
     window.selectFlavorRandom = selectFlavorRandom;
     window.goBackToPage1 = goBackToPage1;
