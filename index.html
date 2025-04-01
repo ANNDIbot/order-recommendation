@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今天吃啥宝</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+    .btn {
+      @apply bg-white text-black text-lg py-4 px-4 rounded-2xl shadow-md text-center;
+    }
+    .btn:hover {
+      @apply shadow-lg;
+    }
+    .btn-random {
+      @apply bg-orange-200 text-black text-lg py-4 px-4 rounded-2xl shadow-md text-center;
+    }
+    .btn-blue {
+      @apply bg-blue-100 text-black text-lg py-3 px-6 rounded-2xl shadow-md text-center;
+    }
+    .section-card {
+      @apply bg-gray-50 rounded-2xl p-6 shadow mb-6;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start py-6 px-4">
+  <div id="app" class="w-full max-w-md space-y-6">
+
+    <!-- 页面 1：选择口味 -->
+    <div id="page1" class="space-y-6">
+      <div class="section-card">
+        <h2 class="text-center text-xl font-semibold mb-2">请选择口味</h2>
+        <div class="border-t border-gray-200 mb-4"></div>
+        <div class="grid grid-cols-2 gap-4">
+          <button class="btn" onclick="selectFlavor('咸鲜')">咸鲜</button>
+          <button class="btn" onclick="selectFlavor('香辣')">香辣</button>
+          <button class="btn" onclick="selectFlavor('偏甜')">偏甜</button>
+          <button class="btn" onclick="selectFlavor('清淡')">清淡</button>
+          <button class="btn-random col-span-2" onclick="selectFlavorRandom()">随机</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 页面 2：选择地区 -->
+    <div id="page2" class="space-y-6 hidden">
+      <div class="section-card">
+        <h2 class="text-center text-xl font-semibold mb-2">请选择菜系</h2>
+        <div class="border-t border-gray-200 mb-4"></div>
+        <div id="regionButtons" class="grid grid-cols-2 gap-4 max-h-[50vh] overflow-y-scroll pr-1"></div>
+        <div class="text-center mt-4">
+          <button class="btn-blue" onclick="goBackToPage1()">← 返回上一步</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 页面 3：推荐结果 -->
+    <div id="page3" class="space-y-6 hidden">
+      <div class="section-card text-center">
+        <h2 class="text-xl font-semibold mb-2">推荐宝子今天吃</h2>
+        <div class="border-t border-gray-200 mb-4"></div>
+        <p class="text-2xl font-bold text-orange-600 bg-white inline-block px-6 py-4 rounded-2xl shadow-md" id="resultText">加载中...</p>
+        <p class="text-sm text-gray-500 mt-4" id="resultTip">✨ 希望你今天吃得开心 ✨</p>
+        <div class="text-center mt-6">
+          <button class="btn-blue" onclick="goBackToPage2()">← 再挑一次</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const flavorRegionMap = {
+      "偏甜": ["韩式", "广式", "江浙"],
+      "咸鲜": ["北方", "云贵", "湘式", "家常", "江浙", "福建", "广式", "美式", "西北"],
+      "清淡": ["日式", "美式", "北方", "家常", "川渝", "广式"],
+      "香辣": ["川渝", "韩式", "西北"]
+    };
+
+    const allRegions = Array.from(new Set(Object.values(flavorRegionMap).flat()));
+    const data = [];  // 请将你的数据手动补上
+
+    let selectedFlavor = '';
+    let selectedRegion = '';
+    let isFlavorRandom = false;
+
+    function selectFlavor(flavor) {
+      selectedFlavor = flavor;
+      isFlavorRandom = false;
+      generateRegionButtons(false);
+      document.getElementById('page1').classList.add('hidden');
+      document.getElementById('page2').classList.remove('hidden');
+    }
+
+    function selectFlavorRandom() {
+      const flavors = Object.keys(flavorRegionMap);
+      selectedFlavor = randomPick(flavors);
+      isFlavorRandom = true;
+      generateRegionButtons(true);
+      document.getElementById('page1').classList.add('hidden');
+      document.getElementById('page2').classList.remove('hidden');
+    }
+
+    function generateRegionButtons(showAll = false) {
+      const regionList = showAll ? allRegions : (flavorRegionMap[selectedFlavor] || []);
+      const container = document.getElementById('regionButtons');
+      container.innerHTML = '';
+
+      regionList.forEach(region => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = region;
+        btn.onclick = () => selectRegion(region);
+        container.appendChild(btn);
+      });
+
+      const btnRandom = document.createElement('button');
+      btnRandom.className = 'btn-random col-span-2';
+      btnRandom.innerText = '随机';
+      btnRandom.onclick = () => selectRegion('随机');
+      container.appendChild(btnRandom);
+    }
+
+    function selectRegion(region) {
+      const regionList = flavorRegionMap[selectedFlavor] || allRegions;
+      selectedRegion = region === '随机' ? randomPick(regionList) : region;
+      document.getElementById('page2').classList.add('hidden');
+      document.getElementById('page3').classList.remove('hidden');
+      showResult();
+    }
+
+    function goBackToPage1() {
+      document.getElementById('page2').classList.add('hidden');
+      document.getElementById('page1').classList.remove('hidden');
+    }
+
+    function goBackToPage2() {
+      document.getElementById('page3').classList.add('hidden');
+      document.getElementById('page2').classList.remove('hidden');
+    }
+
+    function randomPick(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function showResult() {
+      const candidates = data.filter(d => d.flavor === selectedFlavor && d.region === selectedRegion);
+      let pick, message;
+
+      if (candidates.length > 0) {
+        pick = randomPick(candidates).name;
+        message = '✨ 希望你今天吃得开心 ✨';
+      } else {
+        pick = randomPick(data).name;
+        message = '🤔 没有合适的推荐诶...要不今天先试试这个？';
+      }
+
+      document.getElementById('resultText').innerText = pick;
+      document.getElementById('resultTip').innerText = message;
+    }
+  </script>
+</body>
+</html>
