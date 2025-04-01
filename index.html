@@ -10,19 +10,65 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     }
     .btn {
-      @apply bg-white text-black text-lg py-4 px-4 rounded-2xl shadow-md text-center;
+      background-color: white;
+      color: black;
+      font-size: 1.3rem;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .btn:hover {
-      @apply shadow-lg;
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+    .btn:active {
+      transform: scale(0.98);
     }
     .btn-random {
-      @apply bg-orange-200 text-black text-lg py-4 px-4 rounded-2xl shadow-md text-center;
+      background-color: #FED7AA;
+      color: black;
+      font-size: 1.3rem;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-random:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+    .btn-random:active {
+      transform: scale(0.98);
     }
     .btn-blue {
-      @apply bg-blue-100 text-black text-lg py-3 px-6 rounded-2xl shadow-md text-center;
+      background-color: #F3F4F6; /* 浅灰白 */
+      color: black;
+      font-size: 1.2rem;
+      padding: 1rem 1.75rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      text-align: center;
     }
     .section-card {
-      @apply bg-gray-50 rounded-2xl p-6 shadow mb-6;
+      background-color: #F9FAFB;
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      margin-bottom: 2.5rem;
+    }
+    .grid-cols-2 > button {
+      margin-bottom: 1.5rem;
+    }
+    .section-card h2 {
+      margin-bottom: 1.5rem;
+    }
+    .border-t {
+      margin-bottom: 1.5rem;
     }
   </style>
 </head>
@@ -72,6 +118,7 @@
   </div>
 
   <script>
+    // 数据定义
     const flavorRegionMap = {
       "偏甜": ["韩式", "广式", "江浙"],
       "咸鲜": ["北方", "云贵", "湘式", "家常", "江浙", "福建", "广式", "美式", "西北"],
@@ -80,11 +127,65 @@
     };
 
     const allRegions = Array.from(new Set(Object.values(flavorRegionMap).flat()));
-    const data = [];  // 请将你的数据手动补上
 
+    const data = [
+      { name: "石锅拌饭", flavor: "偏甜", region: "韩式" },
+      { name: "避风塘", flavor: "偏甜", region: "广式" },
+      { name: "广式烧味饭", flavor: "偏甜", region: "广式" },
+      { name: "醉美里", flavor: "偏甜", region: "江浙" },
+      { name: "浦高老上海本帮菜", flavor: "偏甜", region: "江浙" },
+      { name: "炒饼丝", flavor: "咸鲜", region: "北方" },
+      { name: "贵州米粉", flavor: "咸鲜", region: "云贵" },
+      { name: "小满手工粉", flavor: "咸鲜", region: "湘式" },
+      { name: "汤面/拌面/炒面", flavor: "咸鲜", region: "家常" },
+      { name: "刺臂/超模/超级碗", flavor: "咸鲜", region: "家常" },
+      { name: "新发现", flavor: "咸鲜", region: "江浙" },
+      { name: "老娘舅", flavor: "咸鲜", region: "江浙" },
+      { name: "外婆家", flavor: "咸鲜", region: "家常" },
+      { name: "沙县小吃", flavor: "咸鲜", region: "福建" },
+      { name: "五香卤味", flavor: "咸鲜", region: "广式" },
+      { name: "炸鸡配奶茶", flavor: "咸鲜", region: "美式" },
+      { name: "新疆炒米粉", flavor: "咸鲜", region: "西北" },
+      { name: "社区食堂or饭堂", flavor: "咸鲜", region: "家常" },
+      { name: "莆田餐厅", flavor: "咸鲜", region: "福建" },
+      { name: "家府潮汕菜", flavor: "咸鲜", region: "广式" },
+      { name: "麦当劳", flavor: "咸鲜", region: "美式" },
+      { name: "西贝", flavor: "咸鲜", region: "西北" },
+      { name: "寿司拼盘", flavor: "清淡", region: "日式" },
+      { name: "赛百味", flavor: "清淡", region: "美式" },
+      { name: "饺子/馄饨", flavor: "清淡", region: "北方" },
+      { name: "寿喜烧", flavor: "清淡", region: "日式" },
+      { name: "沙县", flavor: "清淡", region: "家常" },
+      { name: "翘脚牛肉", flavor: "清淡", region: "川渝" },
+      { name: "左庭右院", flavor: "清淡", region: "广式" },
+      { name: "麻辣香锅", flavor: "香辣", region: "川渝" },
+      { name: "麻辣烫", flavor: "香辣", region: "川渝" },
+      { name: "冒菜", flavor: "香辣", region: "川渝" },
+      { name: "韩式汤饭", flavor: "香辣", region: "韩式" },
+      { name: "新疆炒米粉", flavor: "香辣", region: "西北" }
+    ];
+
+    // 状态变量
     let selectedFlavor = '';
     let selectedRegion = '';
     let isFlavorRandom = false;
+
+    // 功能函数
+    function showResult() {
+      const candidates = data.filter(d => d.flavor === selectedFlavor && d.region === selectedRegion);
+      let pick, message;
+
+      if (candidates.length > 0) {
+        pick = randomPick(candidates).name;
+        message = '✨ 希望你今天吃得开心 ✨';
+      } else {
+        pick = randomPick(data).name;
+        message = '🤔 没有合适的推荐诶...要不今天先试试这个？';
+      }
+
+      document.getElementById('resultText').innerText = pick;
+      document.getElementById('resultTip').innerText = message;
+    }
 
     function selectFlavor(flavor) {
       selectedFlavor = flavor;
@@ -145,21 +246,11 @@
       return list[Math.floor(Math.random() * list.length)];
     }
 
-    function showResult() {
-      const candidates = data.filter(d => d.flavor === selectedFlavor && d.region === selectedRegion);
-      let pick, message;
-
-      if (candidates.length > 0) {
-        pick = randomPick(candidates).name;
-        message = '✨ 希望你今天吃得开心 ✨';
-      } else {
-        pick = randomPick(data).name;
-        message = '🤔 没有合适的推荐诶...要不今天先试试这个？';
-      }
-
-      document.getElementById('resultText').innerText = pick;
-      document.getElementById('resultTip').innerText = message;
-    }
+    // 将函数暴露给全局作用域
+    window.selectFlavor = selectFlavor;
+    window.selectFlavorRandom = selectFlavorRandom;
+    window.goBackToPage1 = goBackToPage1;
+    window.goBackToPage2 = goBackToPage2;
   </script>
 </body>
 </html>
